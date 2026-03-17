@@ -52,3 +52,44 @@ exports.registerUser = async (req, res) => {
     });
   }
 };
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(422).json({
+      status: "failed",
+      message: "Fill in the details.",
+      data: [],
+    });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !(await user.comparePasswords(password))) {
+      return res.status(401).json({
+        status: "failed",
+        message: "Invalid email or password. Try again.",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "User successfully logged in.",
+      data: {
+        id: user._id,
+        user: user,
+        token: generateToken(user._id),
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Could not login user.",
+      data: {
+        error: err.message,
+      },
+    });
+  }
+};
