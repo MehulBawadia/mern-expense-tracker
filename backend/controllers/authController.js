@@ -93,3 +93,32 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+
+exports.getUserInfo = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        status: "failed",
+        message: "User not found with the provided id.",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "User info successfully fetched.",
+      data: {
+        user: user,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Could not get the user info.",
+      data: {
+        error: err.message,
+      },
+    });
+  }
+};
