@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const xlsx = require("xlsx");
 const Income = require("../models/Income");
 
 exports.index = async (req, res) => {
@@ -78,6 +78,34 @@ exports.destroy = async (req, res) => {
     return res.status(500).json({
       status: "error",
       message: "Could not delete income.",
+      data: {
+        error: err.message,
+      },
+    });
+  }
+};
+
+exports.downloadInExcel = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const incomeList = await Income.find({ userId }).sort({ date: -1 });
+
+    const data = incomeList.map((item) => ({
+      Source: item.source,
+      Amount: item.amount,
+      Date: item.date,
+    }));
+
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(data);
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Income");
+    xlsx.writeFile(workbook, "income_details.xlsx");
+    res.download("income_details.xlsx");
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Could not download the income in excel.",
       data: {
         error: err.message,
       },
