@@ -64,3 +64,23 @@ exports.store = async (req, res) => {
     });
   }
 };
+
+exports.destroy = async (req, res) => {
+  try {
+    await Income.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      status: "success",
+      message: "Income successfully destroyed.",
+      data: [],
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Could not delete income.",
+      data: {
+        error: err.message,
+      },
+    });
+  }
+};
