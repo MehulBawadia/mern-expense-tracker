@@ -1,6 +1,28 @@
 const User = require("../models/User");
 const Income = require("../models/Income");
 
+exports.index = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const incomeList = await Income.find({ userId }).sort({ date: -1 });
+
+    res.status(200).json({
+      status: "success",
+      message: "Income successfully fetched.",
+      data: incomeList,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Could not fetch income list.",
+      data: {
+        error: err.message,
+      },
+    });
+  }
+};
+
 exports.store = async (req, res) => {
   const userId = req.user.id;
 
