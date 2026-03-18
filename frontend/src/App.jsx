@@ -11,10 +11,11 @@ import Register from "./pages/Auth/Register";
 import Home from "./pages/Dashboard/Home";
 import Income from "./pages/Dashboard/Income";
 import Expense from "./pages/Dashboard/Expense";
+import UserProvider from "./providers/UserProvider";
 
 const App = () => {
   return (
-    <div>
+    <UserProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Root />} />
@@ -25,7 +26,7 @@ const App = () => {
           <Route path="/expense" exact element={<Expense />} />
         </Routes>
       </Router>
-    </div>
+    </UserProvider>
   );
 };
 
