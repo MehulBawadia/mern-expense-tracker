@@ -1,3 +1,4 @@
+const xlsx = require("xlsx");
 const Expense = require("../models/Expense");
 
 exports.index = async (req, res) => {
@@ -77,6 +78,34 @@ exports.destroy = async (req, res) => {
     return res.status(500).json({
       status: "error",
       message: "Could not delete expense.",
+      data: {
+        error: err.message,
+      },
+    });
+  }
+};
+
+exports.downloadInExcel = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const expenseList = await Expense.find({ userId }).sort({ date: -1 });
+
+    const data = expenseList.map((item) => ({
+      Category: item.category,
+      Amount: item.amount,
+      Date: item.date,
+    }));
+
+    const workbook = xlsx.utils.book_new();
+    const worksheet = xlsx.utils.json_to_sheet(data);
+    xlsx.utils.book_append_sheet(workbook, worksheet, "Expense");
+    xlsx.writeFile(workbook, "expense_details.xlsx");
+    res.download("expense_details.xlsx");
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Could not download the expense in excel.",
       data: {
         error: err.message,
       },
