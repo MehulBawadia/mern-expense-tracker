@@ -63,3 +63,23 @@ exports.store = async (req, res) => {
     });
   }
 };
+
+exports.destroy = async (req, res) => {
+  try {
+    await Expense.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      status: "success",
+      message: "Expense successfully destroyed.",
+      data: [],
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "error",
+      message: "Could not delete expense.",
+      data: {
+        error: err.message,
+      },
+    });
+  }
+};
