@@ -27,14 +27,14 @@ const SideMenu = ({ activeMenu }) => {
     <div className="w-64 h-[calc(100vh-61px)] bg-white border-r border-gray-200/50 p-5 sticky top-15.25 z-20">
       <div className="flex flex-col items-center justify-center gap-3 mt-3 mb-7">
         <CharAvatar
-          fullName={user.user.fullName}
+          fullName={user?.fullName}
           width="w-20"
           height="h-20"
           style="text-2xl"
         />
 
         <h5 className="text-gray-950 font-medium leading-6">
-          {user.user.fullName}
+          {user?.fullName}
         </h5>
       </div>
 
