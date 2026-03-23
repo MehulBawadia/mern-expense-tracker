@@ -6,8 +6,13 @@ import { API_PATHS } from "../../utils/apiPaths";
 import Modal from "../../components/Modal";
 import CreateForm from "../../components/Income/CreateForm";
 import toast from "react-hot-toast";
+import Listing from "../../components/Income/Listing";
+import DeleteAlert from "../../components/DeleteAlert";
+import { useUserAuth } from "../../hooks/useUserAuth";
 
 const Income = () => {
+  useUserAuth();
+
   const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
@@ -71,9 +76,24 @@ const Income = () => {
     }
   };
 
-  // const deleteIncome = async (income) => {};
+  const deleteIncome = async (incomeId) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${API_PATHS.INCOME.DESTROY(incomeId)}`,
+      );
 
-  // const handleDownloadIncomeDetails = async () => {};
+      setOpenDeleteAlert({ show: false, data: null });
+      toast.success(response.data?.message);
+      await fetchIncomeDetails();
+    } catch (error) {
+      console.log(
+        "Could not delete income.",
+        error.response?.data?.message || error.message,
+      );
+    }
+  };
+
+  const handleDownload = async () => {};
 
   useEffect(() => {
     fetchIncomeDetails();
@@ -91,6 +111,14 @@ const Income = () => {
               onAddIncome={() => setOpenAddIncomeModal(true)}
             />
           </div>
+
+          <Listing
+            transactions={incomeData}
+            onDelete={(id) => {
+              setOpenDeleteAlert({ show: true, data: id });
+            }}
+            onDownload={handleDownload}
+          />
         </div>
 
         <Modal
@@ -99,6 +127,17 @@ const Income = () => {
           onClose={() => setOpenAddIncomeModal(false)}
         >
           <CreateForm onAddIncome={(income) => handleAddIncome(income)} />
+        </Modal>
+
+        <Modal
+          isOpen={openDeleteAlert.show}
+          onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+          title="Delete Income"
+        >
+          <DeleteAlert
+            content="Are you sure you want to delete this income detail? This action cannot be undone."
+            onDelete={() => deleteIncome(openDeleteAlert.data)}
+          />
         </Modal>
       </div>
     </DashboardLayout>

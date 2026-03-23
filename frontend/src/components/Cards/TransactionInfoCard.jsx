@@ -3,7 +3,7 @@ import {
   LuUtensils,
   LuTrendingUp,
   LuTrendingDown,
-  LuTrash,
+  LuTrash2,
 } from "react-icons/lu";
 
 const TransactionInfoCard = ({
@@ -13,6 +13,7 @@ const TransactionInfoCard = ({
   amount,
   type,
   hideDeleteBtn,
+  onDelete,
 }) => {
   const getAmountStyles = () =>
     type === "income" ? "bg-green-50 text-green-500" : "bg-red-50 text-red-500";
@@ -39,7 +40,7 @@ const TransactionInfoCard = ({
               className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
               onClick={onDelete}
             >
-              <LuTrash size="10" />
+              <LuTrash2 size="16" />
             </button>
           )}
 
