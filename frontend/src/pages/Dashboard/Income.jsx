@@ -3,9 +3,10 @@ import DashboardLayout from "../../components/layouts/DashboardLayout";
 import Overview from "../../components/Income/Overview";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
+import Modal from "../../components/Modal";
 
 const Income = () => {
-  const [openAddIncomeModal, setOpenAddIcomeModal] = useState(false);
+  const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [openDeleteAlert, setOpenDeleteAlert] = useState({
     show: false,
@@ -27,7 +28,6 @@ const Income = () => {
       console.log("Could not fetch income details.", error);
     } finally {
       setLoading(false);
-      console.log(incomeData);
     }
   };
 
@@ -54,6 +54,14 @@ const Income = () => {
             />
           </div>
         </div>
+
+        <Modal
+          title="Add Income"
+          isOpen={openAddIncomeModal}
+          onClose={() => setOpenAddIncomeModal(false)}
+        >
+          <div>MOdal</div>
+        </Modal>
       </div>
     </DashboardLayout>
   );
