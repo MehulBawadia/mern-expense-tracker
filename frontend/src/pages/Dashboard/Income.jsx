@@ -4,6 +4,8 @@ import Overview from "../../components/Income/Overview";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Modal from "../../components/Modal";
+import CreateForm from "../../components/Income/CreateForm";
+import toast from "react-hot-toast";
 
 const Income = () => {
   const [openAddIncomeModal, setOpenAddIncomeModal] = useState(false);
@@ -31,7 +33,43 @@ const Income = () => {
     }
   };
 
-  // const handleAddIncome = async (income) => {};
+  const handleAddIncome = async (income) => {
+    const { source, date, amount, icon } = income;
+
+    if (source.length <= 0) {
+      toast.error("Source is required.");
+      return;
+    }
+
+    if (!amount || isNaN(amount) || Number(amount) < 0) {
+      toast.error("Amount must be a number greater than 0.");
+      return;
+    }
+
+    if (!date) {
+      toast.error("Date is required.");
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.post(`${API_PATHS.INCOME.STORE}`, {
+        source,
+        amount,
+        date,
+        icon,
+      });
+
+      setOpenAddIncomeModal(false);
+      toast.success(response.data.message);
+
+      await fetchIncomeDetails();
+    } catch (error) {
+      console.log(
+        "Error adding message",
+        error.response?.data?.message || error.message,
+      );
+    }
+  };
 
   // const deleteIncome = async (income) => {};
 
@@ -60,7 +98,7 @@ const Income = () => {
           isOpen={openAddIncomeModal}
           onClose={() => setOpenAddIncomeModal(false)}
         >
-          <div>MOdal</div>
+          <CreateForm onAddIncome={(income) => handleAddIncome(income)} />
         </Modal>
       </div>
     </DashboardLayout>
