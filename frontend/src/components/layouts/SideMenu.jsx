@@ -9,7 +9,7 @@ const SideMenu = ({ activeMenu }) => {
   const navigate = useNavigate();
 
   const handleClick = (route) => {
-    if (route === "logout") {
+    if (route === "/logout") {
       handleLogout();
       return;
     }
@@ -41,7 +41,7 @@ const SideMenu = ({ activeMenu }) => {
       {SIDE_MENU.map((item, index) => (
         <button
           key={`menu_${index}`}
-          className={`w-full flex items-center gap-4 text-[15px] ${activeMenu === item.label ? "text-white bg-primary" : ""} py-3 px-6 rounded-lg mb-3`}
+          className={`w-full flex items-center gap-4 text-[15px] ${activeMenu === item.label ? "text-white bg-primary" : ""} py-3 px-6 rounded-lg mb-3 cursor-pointer hover:bg-primary hover:text-white transition ease-in-out duration-200`}
           onClick={() => handleClick(item.path)}
         >
           <item.icon className="text-2xl" />
