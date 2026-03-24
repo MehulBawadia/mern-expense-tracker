@@ -100,8 +100,8 @@ exports.downloadInExcel = async (req, res) => {
     const workbook = xlsx.utils.book_new();
     const worksheet = xlsx.utils.json_to_sheet(data);
     xlsx.utils.book_append_sheet(workbook, worksheet, "Income");
-    xlsx.writeFile(workbook, "income_details.xlsx");
-    res.download("income_details.xlsx");
+    xlsx.writeFile(workbook, `downloads/${userId}_income_details.xlsx`);
+    res.download(`downloads/${userId}_income_details.xlsx`);
   } catch (err) {
     return res.status(500).json({
       status: "error",
