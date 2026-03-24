@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import Overview from "../../components/Expense/Overview";
+import Modal from "../../components/Modal";
+import CreateForm from "../../components/Expense/CreateForm";
 
 const Expense = () => {
   useUserAuth();
@@ -89,6 +91,14 @@ const Expense = () => {
             />
           </div>
         </div>
+
+        <Modal
+          title="Add Expense"
+          isOpen={openAddExpenseModal}
+          onClose={() => setOpenAddExpenseModal(false)}
+        >
+          <CreateForm onAddExpense={(expense) => handleAddExpense(expense)} />
+        </Modal>
       </div>
     </DashboardLayout>
   );
