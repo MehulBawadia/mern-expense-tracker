@@ -8,6 +8,7 @@ import Overview from "../../components/Expense/Overview";
 import Modal from "../../components/Modal";
 import CreateForm from "../../components/Expense/CreateForm";
 import Listing from "../../components/Expense/Listing";
+import DeleteAlert from "../../components/DeleteAlert";
 
 const Expense = () => {
   useUserAuth();
@@ -75,6 +76,23 @@ const Expense = () => {
     }
   };
 
+  const deleteExpense = async (expenseId) => {
+    try {
+      const response = await axiosInstance.delete(
+        `${API_PATHS.EXPENSE.DESTROY(expenseId)}`,
+      );
+
+      setOpenDeleteAlert({ show: false, data: null });
+      toast.success(response.data?.message);
+      await fetchExpenseDetails();
+    } catch (error) {
+      console.log(
+        "Could not delete expense.",
+        error.response?.data?.message || error.message,
+      );
+    }
+  };
+
   const handleDownload = async () => {};
 
   useEffect(() => {
@@ -109,6 +127,17 @@ const Expense = () => {
           onClose={() => setOpenAddExpenseModal(false)}
         >
           <CreateForm onAddExpense={(expense) => handleAddExpense(expense)} />
+        </Modal>
+
+        <Modal
+          isOpen={openDeleteAlert.show}
+          onClose={() => setOpenDeleteAlert({ show: false, data: null })}
+          title="Delete Expense"
+        >
+          <DeleteAlert
+            content="Are you sure you want to delete this expense detail? This action cannot be undone."
+            onDelete={() => deleteExpense(openDeleteAlert.data)}
+          />
         </Modal>
       </div>
     </DashboardLayout>
