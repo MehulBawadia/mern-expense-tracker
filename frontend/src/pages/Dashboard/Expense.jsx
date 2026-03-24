@@ -7,6 +7,7 @@ import { API_PATHS } from "../../utils/apiPaths";
 import Overview from "../../components/Expense/Overview";
 import Modal from "../../components/Modal";
 import CreateForm from "../../components/Expense/CreateForm";
+import Listing from "../../components/Expense/Listing";
 
 const Expense = () => {
   useUserAuth();
@@ -74,6 +75,8 @@ const Expense = () => {
     }
   };
 
+  const handleDownload = async () => {};
+
   useEffect(() => {
     fetchExpenseDetails();
 
@@ -90,6 +93,14 @@ const Expense = () => {
               onAddExpense={() => setOpenAddExpenseModal(true)}
             />
           </div>
+
+          <Listing
+            transactions={expenseData}
+            onDelete={(id) => {
+              setOpenDeleteAlert({ show: true, data: id });
+            }}
+            onDownload={handleDownload}
+          />
         </div>
 
         <Modal
